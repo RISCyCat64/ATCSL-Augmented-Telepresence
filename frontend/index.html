@@ -4,26 +4,52 @@
   <meta charset="utf-8" />
   <title>ATCSL – Minimal Client</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 820px; margin: 2rem auto; padding: 0 1rem; }
+    input{width:100%;max-width:520px;padding:.5rem;}
+    pre{background:#f6f8fa;padding:1rem;border-radius:8px;white-space:pre-wrap;}
+    button{padding:.6rem 1rem;border:1px solid #ddd;border-radius:8px;cursor:pointer;}
+  </style>
 </head>
 <body>
   <h1>ATCSL – Minimal Client</h1>
-  <label>Room ID: <input id="room" value="demo"/></label>
-  <button id="connect">Connect</button>
+
+  <p><strong>Signaling WS URL</strong> (local default):</p>
+  <input id="wsurl" value="ws://localhost:8080"/>
+
+  <p style="margin-top:1rem;"><strong>Room ID</strong>:</p>
+  <input id="room" value="demo"/>
+
+  <div style="margin-top:1rem;">
+    <button id="connect">Connect</button>
+  </div>
+
+  <h3>Log</h3>
   <pre id="log"></pre>
 
   <script>
     let ws;
-    const log = (...a) => document.getElementById('log').textContent += a.join(' ') + "\\n";
+    const logEl = document.getElementById('log');
+    const log = (...a) => { logEl.textContent += a.join(' ') + "\\n"; };
 
     document.getElementById('connect').onclick = () => {
       const room = document.getElementById('room').value || 'demo';
-      ws = new WebSocket('ws://localhost:8080');
+      const wsurl = document.getElementById('wsurl').value || 'ws://localhost:8080';
+
+      try {
+        ws = new WebSocket(wsurl);
+      } catch (e) {
+        log('WS create error:', e);
+        return;
+      }
+
       ws.onopen = () => {
-        log('WS connected.');
+        log('WS connected →', wsurl);
         ws.send(JSON.stringify({ type: 'join', room }));
       };
+
       ws.onmessage = (ev) => log('←', ev.data);
-      ws.onerror = (e) => log('WS error', e.message || e);
+      ws.onerror = (e) => log('WS error', e?.message || e);
       ws.onclose = () => log('WS closed');
     };
   </script>

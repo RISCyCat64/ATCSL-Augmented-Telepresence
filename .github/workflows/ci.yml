@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  sanity-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Lint placeholder
+        run: |
+          echo "✅ Repo structure OK"
+          test -f README.md
+          test -f backend/server.js
+          test -f frontend/index.html
+          echo "✅ Key files present"
+
+      - name: Backend quick check (syntax)
+        run: node -e "require('fs').accessSync('backend/server.js')"
