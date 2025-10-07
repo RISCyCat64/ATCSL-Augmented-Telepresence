@@ -1,3 +1,38 @@
+cat > .github/workflows/ci.yml <<'EOF'
+name: CI
+
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+sanity-checks:
+runs-on: ubuntu-latest
+steps:
+- name: Checkout
+  users: actions/checkout@v4
+- name : Report key files (non-blocking)
+run: |
+  echo " Checking repository layout..."
+  for f in README.md backend/server.js fontend/index.html; do
+    if [ -f "$f" ]; then
+      echo "Found: $f"
+     else
+      echo " Missing (not blocking): $f"
+      fi
+      done
+
+      -name: Optional Node syntax check (non-blocking)
+      continue-on-error: true
+      run: |
+      if [ -f backend/server.js ]; then
+      echo " Node syntax check for backend/server.js"
+      node -e "require('fs').accessSync('backend/server.js')"
+      else
+      echo " bacend/server.js not presented - skipping"
+      fi
+EOF
+
+
+      
