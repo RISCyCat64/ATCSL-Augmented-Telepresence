@@ -1,0 +1,16 @@
+sequenceDiagram
+  participant OP as Operator (Browser/Device)
+  participant SIG as Signaling (WS)
+  participant OB as Observer (Browser)
+
+  OP->>SIG: join(room)
+  OB->>SIG: join(room)
+
+  OP->>OB: (via SIG) offer SDP
+  OB->>OP: (via SIG) answer SDP
+
+  OP->>OB: (via SIG) ICE candidates
+  OB->>OP: (via SIG) ICE candidates
+
+  Note over OP,OB: DTLS handshake → SRTP keys
+  OP-->>OB: Media flows (E2E encrypted)

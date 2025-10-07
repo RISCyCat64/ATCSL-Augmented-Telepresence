@@ -1,0 +1,23 @@
+%%{init: {'theme':'default'}}%%
+flowchart TB
+  subgraph FE[Frontend (Observer/Operator)]
+    UI[React/Web UI]
+  end
+
+  subgraph BE[Backend Signaling]
+    SIG[Node.js WS Signaling]
+    DB[(Postgres/SQLite)]
+  end
+
+  subgraph INFRA[Infra]
+    TURN[STUN/TURN (Coturn)]
+  end
+
+  DEV[Operator Device (Phone/RPi+Cam+Mic+EEG)] -->|WebRTC| UI
+  UI <-->|WS JSON| SIG
+  SIG --- DB
+  UI -. ICE/NAT traversal .- TURN
+  DEV -. ICE/NAT traversal .- TURN
+
+  classDef c fill:#eef,stroke:#777,stroke-width:1px;
+  class FE,BE,INFRA c;

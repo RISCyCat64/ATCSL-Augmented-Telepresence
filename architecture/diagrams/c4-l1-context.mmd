@@ -1,0 +1,10 @@
+%%{init: {'theme':'default'}}%%
+flowchart LR
+  userOp([User: Operator]) ---|Shares POV| atcsl[(ATCSL System)]
+  atcsl ---|Encrypted media| userOb([User: Observer])
+
+  subgraph atcsl_sub [ATCSL Context]
+    atcsl
+  end
+
+  note right of atcsl: WebRTC (DTLS/SRTP), Signaling (WS), Consent, Audit
