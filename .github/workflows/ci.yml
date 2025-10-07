@@ -1,4 +1,3 @@
-cat > .github/workflows/ci.yml <<'EOF'
 name: CI
 
 on:
@@ -28,9 +27,8 @@ jobs:
         continue-on-error: true
         run: |
           if [ -f backend/server.js ]; then
-            echo "🧪 Running syntax check..."
+            echo "🧪 Syntax check backend/server.js"
             node -c backend/server.js
           else
-            echo "ℹ️ No backend/server.js, skipping"
+            echo "ℹ️ No backend/server.js, skipping syntax test"
           fi
-EOF
