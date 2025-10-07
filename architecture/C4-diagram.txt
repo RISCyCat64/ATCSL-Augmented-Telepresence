@@ -1,0 +1,8 @@
+C4 L1 (Context):
+[User Operator] -> (ATCSL) -> [User Observer]
+(ATCSL) uses WebRTC (E2E media), Node.js signaling, TURN/STUN.
+
+C4 L2 (Containers):
+- Frontend (Observer): React + WebRTC
+- Backend: Node.js (Express+ws) for signaling & consent
+- Infra: Coturn (STUN/TURN), DB (Postgres/SQLite)

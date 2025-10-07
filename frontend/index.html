@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ATCSL – Minimal Client</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <h1>ATCSL – Minimal Client</h1>
+  <label>Room ID: <input id="room" value="demo"/></label>
+  <button id="connect">Connect</button>
+  <pre id="log"></pre>
+
+  <script>
+    let ws;
+    const log = (...a) => document.getElementById('log').textContent += a.join(' ') + "\\n";
+
+    document.getElementById('connect').onclick = () => {
+      const room = document.getElementById('room').value || 'demo';
+      ws = new WebSocket('ws://localhost:8080');
+      ws.onopen = () => {
+        log('WS connected.');
+        ws.send(JSON.stringify({ type: 'join', room }));
+      };
+      ws.onmessage = (ev) => log('←', ev.data);
+      ws.onerror = (e) => log('WS error', e.message || e);
+      ws.onclose = () => log('WS closed');
+    };
+  </script>
+</body>
+</html>
